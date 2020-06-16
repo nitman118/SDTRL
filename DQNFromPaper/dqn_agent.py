@@ -89,13 +89,7 @@ class DQNAgent(object):
         q_pred = self.q_eval.forward(states)[indices, actions]
         q_next = self.q_next.forward(states_).max(dim=1)[0] # 
 
-        '''
-        s->[0.4, 0.2, 0.1,0.3]
-        Episode length
-        Rewards
-        Loss -> (R +d*V(S') - V(S))
-        return loss
-        '''
+        
 
         q_next[dones] = 0.0
         q_target = rewards + self.gamma*q_next
@@ -104,5 +98,5 @@ class DQNAgent(object):
         loss.backward()
         self.q_eval.optimizer.step()
         self.learn_step_counter += 1
-
         self.decrement_epsilon()
+        return loss

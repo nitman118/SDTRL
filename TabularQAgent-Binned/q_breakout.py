@@ -5,7 +5,7 @@ from utility import plot_and_save
 from tabular_q_agent import Tabular_Q_agent
 
 NUM_EPISODES = 5000
-ENABLE_RENDER = False
+ENABLE_RENDER = True
 # env.close()
 
 
@@ -48,7 +48,7 @@ def get_binned_state(obs, bins):
     ind = np.digitize(obs, bins)
     return ind
 
-tabular_q_agent = Tabular_Q_agent(0.99, 0.2, 0.1, num_actions)
+tabular_q_agent = Tabular_Q_agent(0.995, 0.2, 0.1, num_actions)
 
 episodic_rewards=[]
 smooth_ep_rewards=[]
@@ -64,18 +64,18 @@ for episode in range(NUM_EPISODES):
     while not done:
         # env.render ()
         # action = env . action_space.sample()
-        print(get_binned_state(obs, bins))
+        # print(get_binned_state(obs, bins))
         action = tabular_q_agent.policy(get_binned_state(obs, bins))
         # Take the action , make an observation from the environment and obtain a reward .
         new_obs , reward , done , info = env.step(action)
-        tabular_q_agent.update_q_table(obs, action, reward, new_obs, done)
+        tabular_q_agent.update_q_table(get_binned_state(obs, bins), action, reward, get_binned_state(new_obs,bins), done)
         # dqn_agent.store_experience(obs, action, reward, done, next_obs)
         # print ("At time ",t ,", we obtained reward ", reward)
         obs = new_obs
         t+=1
         reward_total = reward_total + reward
 
-        if ENABLE_RENDER and episode % 3 == 0:
+        if ENABLE_RENDER and episode % 100 == 0:
             
             time.sleep(0.00001)
             env.render()
@@ -84,15 +84,15 @@ for episode in range(NUM_EPISODES):
             episodic_rewards.append(reward_total)
             smooth_ep_rewards.append(np.mean(episodic_rewards[-50:]))
 
-            print(f"Episode {episode} finished after {t+1} timesteps, running avg reward: {np.mean(episodic_rewards[-10:])}") #, epsilon:{dqn_agent.eps}
+            print(f"Episode {episode} finished after {t+1} timesteps, running avg reward: {np.mean(episodic_rewards[-100:])}") #, epsilon:{dqn_agent.eps}
             break
 
 env.close()
 
 print(len(tabular_q_agent.q_vals.keys()))
 
-plot_and_save("results","reward_tabular.png",episodic_rewards)
-plot_and_save("results","reward_tabular_smooth.png",smooth_ep_rewards)
+plot_and_save("results","reward_tabular_binned.png",episodic_rewards)
+plot_and_save("results","reward_tabular_binned_smooth.png",smooth_ep_rewards)
 
 
 

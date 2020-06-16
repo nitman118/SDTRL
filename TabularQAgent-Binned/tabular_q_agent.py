@@ -5,6 +5,8 @@ import random
 Q_VALUES = {}
 
 
+
+
 class Tabular_Q_agent:
 
     def __init__(self, discount, step_size, eps, num_actions):
@@ -44,11 +46,14 @@ class Tabular_Q_agent:
         # self.check_q_exists(state)
         state = str(state.tolist()) #stringify state
         if done:
-            self.q_vals[state][action] += self.step_size*(reward - self.q_vals[state][action])
+            loss = reward - self.q_vals[state][action]
+            self.q_vals[state][action] += self.step_size*(loss)
         else:
             new_state_q_arr = self.get_q_value(new_state)
             new_state_q_val = np.max(new_state_q_arr)
-            self.q_vals[state][action] +=  self.step_size*(reward + self.discount*new_state_q_val - self.q_vals[state][action])
+            loss = reward + self.discount*new_state_q_val - self.q_vals[state][action]
+            self.q_vals[state][action] +=  self.step_size*(loss)
+        return loss
 
     def policy(self, state):
 

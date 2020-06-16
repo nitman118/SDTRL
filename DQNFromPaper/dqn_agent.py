@@ -77,7 +77,7 @@ class DQNAgent(object):
 
     def learn(self):
         if self.memory.mem_cntr < self.batch_size:
-            return
+            return np.inf
 
         self.q_eval.optimizer.zero_grad()
 
@@ -99,4 +99,4 @@ class DQNAgent(object):
         self.q_eval.optimizer.step()
         self.learn_step_counter += 1
         self.decrement_epsilon()
-        return loss
+        return loss.item()

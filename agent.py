@@ -34,12 +34,16 @@ class Net(nn.Module):
         super(Net, self).__init__()
         self.dense1 = nn.Linear(num_states, 256)
         self.dense2 = nn.Linear(256,256)
+        # self.dense3 = nn.Linear(256, 512)
+        # self.dense4 = nn.Linear(512,512)
         self.output = nn.Linear(256, num_actions)
 
     def forward(self, state):
         t=state
         t = F.relu(self.dense1(t))
         t = F.relu(self.dense2(t))
+        # t = F.relu(self.dense3(t))
+        # t = F.relu(self.dense4(t))
         t = self.output(t)
         
         return t
@@ -98,7 +102,8 @@ class Agent:
         #loss = self.criterion(predicted,actual)
         loss.backward()
         self.optimizer.step()
-        self.eps = self.eps - self.eps_decay
+        self.eps = max(0.01,self.eps - self.eps_decay)
+        return loss.item()
 
     def store_experience(self, state, action, reward, done, next_state):
         exp = Experience(state, action, reward, done, next_state)

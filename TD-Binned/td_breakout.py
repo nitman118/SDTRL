@@ -2,14 +2,14 @@ import gym
 import time
 import numpy as np
 from utility import plot_and_save, save_table
-from tabular_s_agent import Tabular_S_agent
+from tabular_td_agent import Tabular_TD_agent
 import datetime
 
 now = datetime.datetime.now()
 now_str= now.strftime("%Y-%m-%d-%Hh%Mm%Ss")
 
 
-EXP_NAME = 'BINNED_SARSA_LEARNING'
+EXP_NAME = 'TD_LEARNING'
 GYM_ENV = "Breakout-ram-v0"
 NUM_EPISODES = 7500
 NUM_BINS = 10
@@ -52,7 +52,7 @@ def get_binned_state(obs, bins):
     ind = np.digitize(obs, bins)
     return ind
 
-tabular_s_agent = Tabular_S_agent(0.995, 0.2, 0.1, num_actions)
+tabular_td_agent = Tabular_TD_agent(0.995, 0.2, 0.1, num_actions)
 
 episodic_rewards=[]
 smooth_ep_rewards=[]
@@ -69,13 +69,12 @@ for episode in range(NUM_EPISODES):
     done = False
     while not done:
         # env.render ()
-        # action = env . action_space.sample()
-        # print(get_binned_state(obs, bins))
-        action = tabular_s_agent.policy(get_binned_state(obs, bins))
+        action = env.action_space.sample() #Random policy is being evaluated
+        tabular_td_agent.set_q_value(get_binned_state(obs, bins))
         # Take the action , make an observation from the environment and obtain a reward .
         new_obs , reward , done , info = env.step(action)
-        new_action = tabular_s_agent.policy(get_binned_state(new_obs, bins))
-        loss = tabular_s_agent.update_q_table(get_binned_state(obs, bins), action, reward, get_binned_state(new_obs,bins), new_action, done)
+        new_action = env.action_space.sample()
+        loss = tabular_td_agent.update_q_table(get_binned_state(obs, bins), action, reward, get_binned_state(new_obs,bins), new_action, done)
         # dqn_agent.store_experience(obs, action, reward, done, next_obs)
         # print ("At time ",t ,", we obtained reward ", reward)
         obs = new_obs
@@ -92,7 +91,7 @@ for episode in range(NUM_EPISODES):
         if done:
             episodic_rewards.append(reward_total)
             smooth_ep_rewards.append(np.mean(episodic_rewards[-50:]))
-            RES['Eps'].append(tabular_s_agent.eps)
+            RES['Eps'].append(tabular_td_agent.eps)
             RES['Length'].append(ep_length)
             RES['Reward'].append(reward_total)
             RES['Loss'].append(loss_total)

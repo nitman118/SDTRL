@@ -3,7 +3,7 @@ import random
 
 Q_VALUES = {}
 
-class Tabular_S_agent:
+class Tabular_TD_agent:
 
     def __init__(self, discount, step_size, eps, num_actions):
         self.q_vals = {}
@@ -51,15 +51,15 @@ class Tabular_S_agent:
             self.q_vals[state][action] +=  self.step_size*(loss)
         return loss
 
-    def policy(self, state):
+    
 
-        if random.random() < self.eps:
-            return random.randint(0,self.num_actions-1)
-        else:
-            a_vals = self.get_q_value(state)
-            action = np.argmax(a_vals)
-            return action
-
+    def set_q_value(self, state):
+        # print(state)
+        # print(type(state))
+        state = str(state.tolist())
+        if state not in self.q_vals:
+            self.q_vals[state] = [random.random() for _ in range(self.num_actions)]
+            
 
 
 

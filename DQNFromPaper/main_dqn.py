@@ -56,7 +56,7 @@ if __name__ == '__main__':
 
     for i in range(n_games):
 
-        if i+1 % 10 == 0:
+        if (i+1) % 100 == 0:
             print('----Saving Intermediate Result----')
             F_NAME = f'{EXP_NAME}-{GYM_ENV}-{i}-{now_str}'
             save_table('results',f'{F_NAME}.xlsx', RES)

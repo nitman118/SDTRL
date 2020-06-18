@@ -5,6 +5,7 @@ from dqn_agent import DQNAgent
 from utils import plot_learning_curve, make_env
 from utility import save_table, plot_and_save, save_state
 import datetime
+import time
 
 
 EXP_NAME = 'DQN-Paper'
@@ -34,9 +35,9 @@ def get_filename():
 if __name__ == '__main__':
     env = make_env('BreakoutNoFrameskip-v4')
     best_score = -np.inf
-    load_checkpoint = False
+    load_checkpoint = True
     n_games = NUM_EPISODES
-    agent = DQNAgent(gamma=0.99, epsilon=1.0, lr=0.0001,
+    agent = DQNAgent(gamma=0.99, epsilon=0, lr=0.0001,
                      input_dims=(env.observation_space.shape),
                      n_actions=env.action_space.n, mem_size=75000, eps_min=0.1,
                      batch_size=32, replace=1000, eps_dec=0.5e-4,
@@ -79,6 +80,7 @@ if __name__ == '__main__':
         store_state = False
         while not done:
             if i%10==0:
+                time.sleep(0.1)
                 env.render()
             action, actions = agent.choose_action(observation)
             observation_, reward, done, info = env.step(action)
@@ -110,7 +112,7 @@ if __name__ == '__main__':
                 acts = None
                 store_act = False
 
-            if (ep_length == 500 or store_state) and agent.epsilon < 0.2 and store_act and i > 350:
+            if (ep_length == 500 or ep_length<150 or store_state) and agent.epsilon < 0.2 and store_act and i < 2:
                 # print('true')
                 save_state(acts, os.path.join('saved_states', f'{get_filename()}-acts-ep{i}-len{ep_length}-eps{agent.epsilon}'))
                 save_state(observation,os.path.join('saved_states', f'{get_filename()}-imgs-ep{i}-len{ep_length}-eps{agent.epsilon}'))
@@ -138,6 +140,6 @@ if __name__ == '__main__':
     x = [i+1 for i in range(len(scores))]
     # plot_learning_curve(steps_array, scores, eps_history, figure_file)
     
-    F_NAME = f'{EXP_NAME}-{GYM_ENV}-{NUM_EPISODES}-{now_str}'
-    save_table('results',f'{F_NAME}.xlsx', RES)
+    #F_NAME = f'{EXP_NAME}-{GYM_ENV}-{NUM_EPISODES}-{now_str}'
+    #save_table('results',f'{F_NAME}.xlsx', RES)
     # plot_and_save('results', fname= , data=)

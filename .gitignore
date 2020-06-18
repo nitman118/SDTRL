@@ -88,6 +88,8 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+#numpy array
+*.npy
 # Chutzpah Test files
 _Chutzpah*
 

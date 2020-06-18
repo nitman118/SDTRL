@@ -48,7 +48,7 @@ print(" Press Enter to continue ...")
 input()
 
 
-tabular_q_agent = Tabular_Q_agent(0.99, 0.2, 0.1, num_actions)
+tabular_q_agent = Tabular_Q_agent(0.995, 0.2, 0.1, num_actions)
 
 episodic_rewards=[]
 smooth_ep_rewards=[]

@@ -40,9 +40,10 @@ class DQNAgent(object):
             actions = self.q_eval.forward(state)
             action = T.argmax(actions).item()
         else:
+            actions=None
             action = np.random.choice(self.action_space)
 
-        return action
+        return action, actions
 
     def store_transition(self, state, action, reward, state_, done):
         self.memory.store_transition(state, action, reward, state_, done)

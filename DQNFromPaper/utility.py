@@ -1,7 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import numpy as np
 
 def plot_and_save(path, fname, data):
     """Plot and Save 
@@ -39,6 +39,14 @@ def save_table(path, fname, table):
     save_to = os.path.join(path, fname)
     res_df.to_excel(save_to, index=False)
     
+
+def save_state(state, fname):
+    np.save(fname, state)
+
+def load_state(fname):
+    return np.load(fname)
+
+
 
 
 

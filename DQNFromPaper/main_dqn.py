@@ -37,7 +37,7 @@ if __name__ == '__main__':
     best_score = -np.inf
     load_checkpoint = True
     n_games = NUM_EPISODES
-    agent = DQNAgent(gamma=0.99, epsilon=0, lr=0.0001,
+    agent = DQNAgent(gamma=0.99, epsilon=0.1, lr=0.0001,
                      input_dims=(env.observation_space.shape),
                      n_actions=env.action_space.n, mem_size=75000, eps_min=0.1,
                      batch_size=32, replace=1000, eps_dec=0.5e-4,

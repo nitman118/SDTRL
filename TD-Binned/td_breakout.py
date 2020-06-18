@@ -70,11 +70,12 @@ for episode in range(NUM_EPISODES):
     while not done:
         # env.render ()
         action = env.action_space.sample() #Random policy is being evaluated
-        tabular_td_agent.set_q_value(get_binned_state(obs, bins))
+        
         # Take the action , make an observation from the environment and obtain a reward .
         new_obs , reward , done , info = env.step(action)
-        new_action = env.action_space.sample()
-        loss = tabular_td_agent.update_q_table(get_binned_state(obs, bins), action, reward, get_binned_state(new_obs,bins), new_action, done)
+        tabular_td_agent.set_v_value(get_binned_state(obs, bins))
+        # new_action = env.action_space.sample()
+        loss = tabular_td_agent.update_v_table(get_binned_state(obs, bins), reward, get_binned_state(new_obs,bins), done)
         # dqn_agent.store_experience(obs, action, reward, done, next_obs)
         # print ("At time ",t ,", we obtained reward ", reward)
         obs = new_obs
@@ -103,6 +104,7 @@ env.close()
 
 # print(len(tabular_q_agent.q_vals.keys()))
 # print(RES)
+
 # print(F_NAME)
 
 plot_and_save("results",f"{F_NAME}-reward.png",episodic_rewards)

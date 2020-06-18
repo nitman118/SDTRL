@@ -64,21 +64,18 @@ for episode in range(NUM_EPISODES):
     ep_length = 0
     t=0
     obs = env.reset()
-
+    action = tabular_s_agent.policy(get_binned_state(obs, bins))
     # Run the game .
     done = False
     while not done:
-        # env.render ()
-        # action = env . action_space.sample()
-        # print(get_binned_state(obs, bins))
-        action = tabular_s_agent.policy(get_binned_state(obs, bins))
         # Take the action , make an observation from the environment and obtain a reward .
         new_obs , reward , done , info = env.step(action)
         new_action = tabular_s_agent.policy(get_binned_state(new_obs, bins))
         loss = tabular_s_agent.update_q_table(get_binned_state(obs, bins), action, reward, get_binned_state(new_obs,bins), new_action, done)
-        # dqn_agent.store_experience(obs, action, reward, done, next_obs)
-        # print ("At time ",t ,", we obtained reward ", reward)
+
         obs = new_obs
+        action = new_action
+
         t+=1
         reward_total = reward_total + reward
         loss_total += loss

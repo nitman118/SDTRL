@@ -23,6 +23,7 @@ RES={
     }
 
 F_NAME = f'{EXP_NAME}-{GYM_ENV}-{NUM_EPISODES}-{NUM_BINS}-{now_str}'
+
 env = gym.make(GYM_ENV)
 
 num_actions = int(env.action_space.n)
